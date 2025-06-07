@@ -10,9 +10,16 @@
         align-items: center;
         height: 100vh;
         margin: 0;
+        background: linear-gradient(
+                135deg,
+                #001f3f 0%,    /* very dark navy */
+                #003366 50%,   /* mid-tone navy */
+                #004c99 100%   /* brighter navy */
+        );
       }
       h1 {
         font-family: sans-serif;
+        color: #FFF;
         margin-bottom: 30px;
       }
       img {
@@ -20,10 +27,12 @@
         width: 100%;
         height: auto;
         display: block;
+        border: 5px solid #000;
+        border-radius: 8px;
       }
       .caption {
         font-family: sans-serif;
-        color: #000;
+        color: #FFF;
         margin-top: 15px;
         text-align: center;
         font-size: 1.0em;
