@@ -2,6 +2,7 @@
 <html>
   <head>
     <title>Yackbros.com</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
       body {
         display: flex;
@@ -10,21 +11,24 @@
         align-items: center;
         height: 100vh;
         margin: 0;
+        padding: 1rem;
         background: linear-gradient(
                 135deg,
-                #001f3f 0%,    /* very dark navy */
-                #003366 50%,   /* mid-tone navy */
-                #004c99 100%   /* brighter navy */
+                #001f3f 0%,
+                #003366 50%,
+                #004c99 100%
         );
       }
       h1 {
         font-family: sans-serif;
         color: #FFF;
-        margin-bottom: 30px;
+        margin-bottom: 1.5rem;
+        font-size: calc(1.5rem + 2vw);
+        text-align: center;
       }
       img {
+        width: 90%;
         max-width: 400px;
-        width: 100%;
         height: auto;
         display: block;
         border: 5px solid #000;
@@ -33,9 +37,18 @@
       .caption {
         font-family: sans-serif;
         color: #FFF;
-        margin-top: 15px;
+        margin-top: 1rem;
         text-align: center;
-        font-size: 1.0em;
+        font-size: 1rem;
+      }
+      /* fine-tune smaller screens: */
+      @media (max-width: 400px) {
+        h1 {
+          font-size: 1.75rem;
+        }
+        img {
+          border-width: 3px;
+        }
       }
     </style>
   </head>
@@ -45,4 +58,3 @@
     <p class="caption">The bros</p>
   </body>
 </html>
-
