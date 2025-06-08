@@ -26,13 +26,49 @@
         font-size: calc(1.5rem + 2vw);
         text-align: center;
       }
-      img {
+      .photo-container {
+        position: relative;
+        display: inline-block;
         width: 90%;
         max-width: 400px;
         height: auto;
+      }
+      .bros-photo {
         display: block;
+        width: 100%;
+        height: auto;
         border: 5px solid #000;
         border-radius: 8px;
+      }
+      .grad-cap {
+        position: absolute;
+        top: 9%;      /* start well above the photo */
+        left: 48%;         /* center horizontally */
+        transform: translateX(-50%) rotate(-20deg);
+        width: 20%;        /* adjust to fit your brother’s head */
+        opacity: 1.0;
+        /* set up the keyframe animation (but don’t play yet) */
+        animation-name: dropCap;
+        animation-duration: 2s;
+        /*animation-delay: 0.5s; !* wait half-second before dropping *!*/
+        animation-play-state: running;
+      }
+      /* Keyframes: opacity & drop into place */
+      @keyframes dropCap {
+        0% {
+          position: absolute;
+          top: -29%;
+          opacity: 0.5;
+          transform: translateX(-50%) rotate(-50deg);
+        }
+        100% {
+          position: absolute;
+          opacity: 1;
+          top: 9%;
+          width: 20%;
+          left: 48%;
+          transform: translateX(-50%) rotate(-20deg);
+        }
       }
       .caption {
         font-family: sans-serif;
@@ -54,7 +90,10 @@
   </head>
   <body>
     <h1>Welcome to Yackbros.com</h1>
-    <img src="assets/images/yackbros.jpg" alt="The Yackbros">
+    <div class="photo-container">
+      <img class="bros-photo" src="assets/images/yackbros.jpg" alt="The Yackbros">
+      <img class="grad-cap" src="assets/images/mortarboard.png" alt="Graduation cap">
+    </div>
     <p class="caption">The bros</p>
   </body>
 </html>
