@@ -51,7 +51,7 @@
         animation-name: dropCap;
         animation-duration: 2s;
         /*animation-delay: 0.5s; !* wait half-second before dropping *!*/
-        animation-play-state: running;
+        animation-play-state: paused;
       }
       /* Keyframes: opacity & drop into place */
       @keyframes dropCap {
@@ -88,6 +88,25 @@
       }
     </style>
   </head>
+  <!-- include a lightweight confetti lib -->
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
+  <script>
+    // simple “only once per session” guard
+    window.addEventListener('load', () => {
+      // 1) start the cap animation
+      document.querySelector('.grad-cap').style.animationPlayState = 'running';
+
+      // 2) fire confetti shortly after
+      setTimeout(() => {
+        confetti({
+          particleCount: 400,
+          spread: 360,
+          origin: {y: 0.5}
+        });
+      }, 2000);
+
+    });
+  </script>
   <body>
     <h1>Welcome to Yackbros.com</h1>
     <div class="photo-container">
