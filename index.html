@@ -1,23 +1,43 @@
 <!DOCTYPE html>
 <html>
   <head>
+    <meta charset="UTF-8">
     <title>Yackbros.com</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
-      body {
+      html, body {
+        height: 100%;
+        margin: 0;
+        overflow-y: scroll;
+        scroll-snap-type: y mandatory;
+        scroll-behavior: smooth;
+      }
+
+      .page {
+        scroll-snap-align: start;
+        width: 100%;
+        height: 100vh;
         display: flex;
         flex-direction: column;
         justify-content: center;
         align-items: center;
-        height: 100vh;
-        margin: 0;
-        padding: 1rem;
+      }
+
+      /* your existing skin → you can override per-page if needed */
+      .page1 {
         background: linear-gradient(
                 135deg,
                 #001f3f 0%,
                 #003366 50%,
                 #004c99 100%
         );
+      }
+      .page2 {
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+        padding: 0;
+        background: black;
       }
       h1 {
         font-family: sans-serif;
@@ -42,18 +62,15 @@
       }
       .grad-cap {
         position: absolute;
-        top: 9%;      /* start well above the photo */
-        left: 48%;         /* center horizontally */
+        top: 9%;
+        left: 48%;
         transform: translateX(-50%) rotate(-20deg);
-        width: 20%;        /* adjust to fit your brother’s head */
+        width: 20%;
         opacity: 1.0;
-        /* set up the keyframe animation (but don’t play yet) */
         animation-name: dropCap;
         animation-duration: 2s;
-        /*animation-delay: 0.5s; !* wait half-second before dropping *!*/
         animation-play-state: paused;
       }
-      /* Keyframes: opacity & drop into place */
       @keyframes dropCap {
         0% {
           position: absolute;
@@ -77,7 +94,6 @@
         text-align: center;
         font-size: 1rem;
       }
-      /* fine-tune smaller screens: */
       @media (max-width: 400px) {
         h1 {
           font-size: 1.75rem;
@@ -86,33 +102,200 @@
           border-width: 3px;
         }
       }
+      #slideshow-container {
+        width: 100%;
+        height: 100vh;
+        margin: 0;
+        overflow: hidden;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+      #slideshow-image {
+        width: 100%;
+        height: auto;
+        object-fit: cover;
+        display: block;
+      }
+      #play-pause-indicator {
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        font-size: 2rem;
+        line-height: 1;
+        background: rgba(0, 0, 0, 0.6);
+        color: #fff;
+        padding: 0.25em 0.5em;
+        border-radius: 0.3em;
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.4s ease;
+        z-index: 1001;
+      }
+      #play-pause-indicator.show {
+        opacity: 1;
+      }
+
     </style>
   </head>
-  <!-- include a lightweight confetti lib -->
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const pages = Array.from(document.querySelectorAll('.page'));
+
+      // Find the index of the page closest to the top of the viewport
+      function getCurrentPageIndex() {
+        return pages.findIndex(page => {
+          const rect = page.getBoundingClientRect();
+          // consider “current” if its top is within ± half a viewport height
+          return rect.top >= -window.innerHeight/2 && rect.top <= window.innerHeight/2;
+        });
+      }
+
+      document.addEventListener('keydown', e => {
+        if (e.key !== 'ArrowDown' && e.key !== 'ArrowUp') return;
+
+        e.preventDefault();
+        let idx = getCurrentPageIndex();
+        if (idx === -1) idx = 0;  // fallback to first page
+
+        if (e.key === 'ArrowDown' && idx < pages.length - 1) {
+          idx++;
+        } else if (e.key === 'ArrowUp' && idx > 0) {
+          idx--;
+        }
+
+        pages[idx].scrollIntoView({ behavior: 'smooth' });
+      });
+    });
+  </script>
   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
   <script>
-    // simple “only once per session” guard
     window.addEventListener('load', () => {
-      // 1) start the cap animation
       document.querySelector('.grad-cap').style.animationPlayState = 'running';
-
-      // 2) fire confetti shortly after
       setTimeout(() => {
         confetti({
           particleCount: 400,
           spread: 360,
           origin: {y: 0.5}
         });
-      }, 2000);
-
+      }, 500);
     });
   </script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const slides = [
+        'assets/slides/slide1.jpg',
+        'assets/slides/slide2.jpg',
+      ];
+      let current = 0;
+      let intervalId = null;
+      let paused = false;
+      let delay = 2000;
+      const imgEl = document.getElementById('slideshow-image');
+
+      const indicator = document.getElementById('play-pause-indicator');
+
+      function flashIndicator(symbol) {
+        indicator.textContent = symbol;
+        indicator.classList.add('show');
+        // fade out after 0.8s
+        setTimeout(() => indicator.classList.remove('show'), 800);
+      }
+
+      function showSlide(idx) {
+        imgEl.src = slides[idx];
+      }
+      function nextSlide() {
+        current = (current + 1) % slides.length;
+        showSlide(current);
+      }
+      function prevSlide() {
+        current = (current - 1 + slides.length) % slides.length;
+        showSlide(current);
+      }
+      function startSlideshow() {
+        paused = false;
+        current = 0;
+        showSlide(current);
+        if (intervalId) clearInterval(intervalId);
+        intervalId = setInterval(nextSlide, delay);
+      }
+      function pauseSlideshow() {
+        if (intervalId) clearInterval(intervalId);
+        paused = true;
+        flashIndicator('⏸️');
+      }
+      function resumeSlideshow() {
+        if (intervalId) clearInterval(intervalId);
+        paused = false;
+        intervalId = setInterval(nextSlide, delay);
+        flashIndicator('▶️');
+      }
+      function resetTimer() {
+        if (paused) return;            // don’t restart if paused
+        if (intervalId) clearInterval(intervalId);
+        intervalId = setInterval(nextSlide, delay);
+      }
+
+      // helper to detect which “.page” is in view
+      function getCurrentPageIndex() {
+        const pages = Array.from(document.querySelectorAll('.page'));
+        return pages.findIndex(page => {
+          const r = page.getBoundingClientRect();
+          return r.top >= -window.innerHeight/2 && r.top <= window.innerHeight/2;
+        });
+      }
+
+      // start when page2 is ≥50% visible
+      new IntersectionObserver(entries => {
+        for (let e of entries) {
+          if (e.target.classList.contains('page2') && e.isIntersecting) {
+            startSlideshow();
+          }
+        }
+      }, { threshold: 0.5 })
+              .observe(document.querySelector('.page2'));
+
+      // keyboard controls
+      document.addEventListener('keydown', e => {
+        const pageIdx = getCurrentPageIndex();
+        // only respond when on page2 (index 1)
+        if (pageIdx !== 1) return;
+
+        switch (e.key) {
+          case 'ArrowRight':
+            e.preventDefault();
+            nextSlide();
+            resetTimer();
+            break;
+          case 'ArrowLeft':
+            e.preventDefault();
+            prevSlide();
+            resetTimer();
+            break;
+          case ' ':
+          case 'Spacebar':   // for some older browsers
+            e.preventDefault();
+            paused ? resumeSlideshow() : pauseSlideshow();
+            break;
+        }
+      });
+    });
+  </script>
+
   <body>
-    <h1>Welcome to Yackbros.com</h1>
+  <section class="page page1">
+    <h1>Congrats Dr. Dan! 🎉🎊</h1>
     <div class="photo-container">
       <img class="bros-photo" src="assets/images/yackbros.jpg" alt="The Yackbros">
       <img class="grad-cap" src="assets/images/mortarboard.png" alt="Graduation cap">
     </div>
-    <p class="caption">The bros</p>
+  </section>
+  <div id="play-pause-indicator"></div>
+  <section class="page page2">
+    <div id="slideshow-container">
+      <img id="slideshow-image" src="" alt="Slide">
+    </div>
+  </section>
   </body>
 </html>
