@@ -129,6 +129,7 @@ h1 {
 }
 
 .comment {
+    position: relative;
     background: #1a1a1a;
     color: #f1f1f1;
     padding: 1rem;
@@ -137,6 +138,29 @@ h1 {
     box-shadow: 0 2px 4px rgba(0,0,0,0.4);
     font-family: sans-serif;
 }
+
+.comment .like-btn {
+    position: absolute;
+    right: 0.8em;
+    bottom: 0.8em;
+    display: flex;
+    align-items: center;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    font-size: 1rem;
+    color: #888;
+}
+.comment .like-btn.liked {
+    color: #e74c3c;
+}
+.comment .like-btn svg {
+    width: 1.2em;
+    height: 1.2em;
+    margin-right: 0.2em;
+    fill: currentColor;
+}
+
 
 .comment-name {
     font-weight: bold;
