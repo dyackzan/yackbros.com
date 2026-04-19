@@ -84,6 +84,7 @@ Read PHOTO_GALLERY.md and add all new photos from ~/Downloads into the homepage 
 - Keep portrait images narrower than landscape images.
 - Do not remove existing photos unless explicitly requested.
 - Do not add captions unless explicitly requested.
+- Do not put site-served images in Git LFS while the site is hosted on GitHub Pages. GitHub Pages serves the LFS pointer file instead of the real image, which breaks the gallery.
 
 ## Files Usually Touched
 
