@@ -75,33 +75,6 @@ h1 {
     border-radius: 20px;
     box-shadow: 0 24px 40px rgba(0, 0, 0, 0.3);
 }
-.grad-cap {
-    position: absolute;
-    top: 9%;
-    left: 48%;
-    transform: translateX(-50%) rotate(-20deg);
-    width: 20%;
-    opacity: 1.0;
-    animation-name: dropCap;
-    animation-duration: 2s;
-    animation-play-state: paused;
-}
-@keyframes dropCap {
-    0% {
-        position: absolute;
-        top: -29%;
-        opacity: 0.5;
-        transform: translateX(-50%) rotate(-50deg);
-    }
-    100% {
-        position: absolute;
-        opacity: 1;
-        top: 9%;
-        width: 20%;
-        left: 48%;
-        transform: translateX(-50%) rotate(-20deg);
-    }
-}
 .caption {
     font-family: Georgia, "Times New Roman", serif;
     color: #FFF;
