@@ -19,15 +19,28 @@
     <button id="scroll-to-comments" class="scroll-button">Comments & Feedback<br>⬇️</button>
   </section>
   <section class="page page2">
-    <h2>Comments & Feedback for the Yackbros</h2>
-    <h4>Let us know what you think of the site, what we should add, or who your favorite Yackbro is.</h4>
-    <form id="comment-form">
-      <input type="text" id="name" placeholder="Your name" required />
-      <textarea id="message" placeholder="Your comment" rows="3" required></textarea>
-      <button type="submit">Post</button>
-    </form>
-    <div id="comments-container">
-      <ul id="comments-list"></ul>
+    <div class="comments-shell">
+      <header class="comments-header">
+        <p class="eyebrow">Guestbook</p>
+        <h2>Comments & Feedback for the Yackbros</h2>
+        <p class="comments-intro">
+          Leave a note for the brothers, suggest what the site needs next, or make the case for your favorite Yackbro.
+        </p>
+      </header>
+      <form id="comment-form">
+        <label class="sr-only" for="name">Your name</label>
+        <input type="text" id="name" name="name" placeholder="Your name" maxlength="80" required />
+        <label class="sr-only" for="message">Your comment</label>
+        <textarea id="message" name="message" placeholder="Your comment" rows="4" maxlength="1000" required></textarea>
+        <div class="form-actions">
+          <p id="form-status" class="form-status" aria-live="polite"></p>
+          <button type="submit">Post Comment</button>
+        </div>
+      </form>
+      <div id="comments-container">
+        <p id="comments-status" class="comments-status" aria-live="polite">Loading comments...</p>
+        <ul id="comments-list"></ul>
+      </div>
     </div>
   </section>
   </body>
