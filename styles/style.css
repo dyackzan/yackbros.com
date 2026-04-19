@@ -332,6 +332,19 @@ h1 {
     min-height: 1.25rem;
 }
 
+.turnstile-container {
+    display: flex;
+    justify-content: center;
+}
+
+.honeypot-field {
+    position: absolute;
+    left: -9999px;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+}
+
 .form-status[data-state="error"],
 .comments-status[data-state="error"] {
     color: #ff9e9e;

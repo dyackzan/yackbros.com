@@ -5,7 +5,9 @@
     <link rel="icon" href="yb.png" />
     <title>Yackbros.com</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="turnstile-site-key" content="">
     <link href="styles/style.css" rel="stylesheet" />
+    <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
   </head>
   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
   <script type="module" src="/main.js"></script>
@@ -32,6 +34,13 @@
         <input type="text" id="name" name="name" placeholder="Your name" maxlength="80" required />
         <label class="sr-only" for="message">Your comment</label>
         <textarea id="message" name="message" placeholder="Your comment" rows="4" maxlength="1000" required></textarea>
+        <div class="honeypot-field" aria-hidden="true">
+          <label for="website">Website</label>
+          <input type="text" id="website" name="website" tabindex="-1" autocomplete="off" />
+        </div>
+        <div id="turnstile-container" class="turnstile-container" hidden>
+          <div id="turnstile-widget"></div>
+        </div>
         <div class="form-actions">
           <p id="form-status" class="form-status" aria-live="polite"></p>
           <button type="submit">Post Comment</button>

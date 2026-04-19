@@ -8,9 +8,14 @@ const commentsList = document.getElementById('comments-list');
 const form = document.getElementById('comment-form');
 const nameInput = document.getElementById('name');
 const messageInput = document.getElementById('message');
+const websiteInput = document.getElementById('website');
 const commentsStatus = document.getElementById('comments-status');
 const formStatus = document.getElementById('form-status');
 const submitButton = form?.querySelector('button[type="submit"]');
+const turnstileContainer = document.getElementById('turnstile-container');
+const turnstileWidget = document.getElementById('turnstile-widget');
+const TURNSTILE_SITE_KEY = document.querySelector('meta[name="turnstile-site-key"]')?.content?.trim() || '';
+let turnstileWidgetId = null;
 
 let comments = [];
 
@@ -42,6 +47,45 @@ function setCommentsStatus(message, state = '') {
 function setFormStatus(message, state = '') {
     formStatus.textContent = message;
     formStatus.dataset.state = state;
+}
+
+function getTurnstileToken() {
+    if (!TURNSTILE_SITE_KEY || !window.turnstile || turnstileWidgetId === null) {
+        return '';
+    }
+    const token = window.turnstile.getResponse(turnstileWidgetId);
+    return typeof token === 'string' ? token : '';
+}
+
+function resetTurnstile() {
+    if (!TURNSTILE_SITE_KEY || !window.turnstile || turnstileWidgetId === null) {
+        return;
+    }
+    window.turnstile.reset(turnstileWidgetId);
+}
+
+function initializeTurnstile() {
+    if (!TURNSTILE_SITE_KEY || !turnstileContainer || !turnstileWidget) {
+        return;
+    }
+
+    const renderWidget = () => {
+        if (!window.turnstile || turnstileWidgetId !== null) {
+            return;
+        }
+        turnstileWidgetId = window.turnstile.render(turnstileWidget, {
+            sitekey: TURNSTILE_SITE_KEY,
+            theme: 'dark'
+        });
+        turnstileContainer.hidden = false;
+    };
+
+    if (window.turnstile) {
+        renderWidget();
+        return;
+    }
+
+    window.addEventListener('load', renderWidget, { once: true });
 }
 
 function formatCommentDate(comment) {
@@ -178,6 +222,8 @@ form.addEventListener('submit', async e => {
     e.preventDefault();
     const name = nameInput.value.trim();
     const message = messageInput.value.trim();
+    const website = websiteInput.value.trim();
+    const turnstileToken = getTurnstileToken();
     if (!name || !message) return;
 
     submitButton.disabled = true;
@@ -187,10 +233,12 @@ form.addEventListener('submit', async e => {
         await fetchJson(API.post, {
             method: 'POST',
             headers: {'Content-Type':'application/json'},
-            body: JSON.stringify({ name, message })
+            body: JSON.stringify({ name, message, website, turnstileToken })
         });
 
         messageInput.value = '';
+        websiteInput.value = '';
+        resetTurnstile();
         setFormStatus('Comment posted.', 'success');
         await loadComments();
     } catch (error) {
@@ -201,4 +249,5 @@ form.addEventListener('submit', async e => {
     }
 });
 
+initializeTurnstile();
 loadComments();
